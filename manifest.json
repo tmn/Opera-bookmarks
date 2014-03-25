@@ -1,0 +1,42 @@
+{
+  "name": "-o-bookmarks",
+  "version": "2.0",
+  "manifest_version": 2,
+  "description": "The missing bookmark manager for hte Opera Browser",
+
+  "developer": {
+      "name": "Tri M. Nguyen",
+      "url": "http://tmn.io/"
+  },
+
+  "permissions":[
+      "tabs",
+      "bookmarks"
+  ],
+
+  "options_page": "options.html",
+
+  "background": {"scripts": ["scripts/background.js"]},
+
+  "icons": {
+    "16": "media/bookmark_red.png",
+    "48": "media/bookmark_red.png",
+    "128": "media/bookmark_red.png"
+  },
+
+  "page_action": {
+    "default_icon": "media/bookmark_grey.png",
+    "default_title": "Simply doing things",
+    "default_popup": "popup.html"
+  },
+
+  "commands": {
+    "_execute_page_action": {
+      "suggested_key": {
+        "default": "Alt+D"
+      }
+    }
+  }
+
+
+}
