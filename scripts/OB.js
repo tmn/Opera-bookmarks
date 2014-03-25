@@ -85,7 +85,7 @@ OB.utils = OB.utils || {};
     var e = document.getElementById('add-bookmark-folders');
 
     if (!OB.exists(current_page.url)) {
-      chrome.bookmarks.create({parentId:e.options[e.selectedIndex].value, title:document.getElementById('title').value, url:current_page.url});
+      chrome.bookmarks.create({parentId:e.options[e.selectedIndex].value, title:document.getElementById('title').innerHTML, url:current_page.url});
 
 
       chrome.tabs.query({currentWindow: true, active: true}, function(tab) {
