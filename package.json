@@ -1,0 +1,9 @@
+{
+  "name": "",
+  "description": "",
+  "version": "",
+  "private": true,
+  "jshintConfig": {
+    "laxcomma": true
+  }
+}
