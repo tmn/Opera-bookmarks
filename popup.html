@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <title>oBook</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+  <header >
+    <span contenteditable="true" id="title">Bookmark title</span>
+    <section id="confirmation-buttons">
+      <button id="ui-save" autofocus="autofocus">Save</button><button id="cancel">Cancel</button>
+    </section>
+  </header>
+
+  <section id="container">
+
+    <section id="tab_1">
+      <div class="container">
+        <select id="add-bookmark-folders">
+        </select>
+
+        <input type="search" name="" id="search-field" placeholder="Search in bookmarks">
+      </div>
+
+      <div id="search-result">
+        <h2>Search result</h2>
+        <ul>
+          <li>test</li>
+        </ul>
+      </div>
+
+      <ul>
+        <li><a href="#" id="link-manager" data-site="manager">Bookmark manager</a></li>
+      </ul>
+      <ul>
+        <li><a href="#" id="link-options" data-site="options">Preferences</a></li>
+        <li><a href="#" id="link-help" data-site="http://bookmarks.tmn.io/help">Help</a></li>
+      </ul>
+    </section>
+  </section>
+
+  <script src="scripts/browser.js"></script>
+  <script src="scripts/OB.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/popup.js"></script>
+</body>
+</html>
