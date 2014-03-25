@@ -26,16 +26,16 @@ cancel_button.addEventListener('click', function (e) {
   window.close();
 });
 
-// search_field.addEventListener('keyup', function(e) {
-//   if (search_field.value.length > 0) {
-//     search_bookmarks(search_field.value);
-//     Utils.remove_class('hidden', document.getElementById('search-indicator'));
-//   }
-//   else {
-//     get_children(active_index);
-//     Utils.add_class('hidden', document.getElementById('search-indicator'));
-//   }
-// });
+search_field.addEventListener('keyup', function(e) {
+  if (search_field.value.length > 0) {
+    OB.search_bookmarks(search_field.value);
+    Utils.remove_class('hidden', document.getElementById('search-result'));
+  }
+  else {
+    // OB.get_children(active_index);
+    Utils.add_class('hidden', document.getElementById('search-result'));
+  }
+});
 
 /* Fill inn root folders
 -------------------------------------------------------------------- */

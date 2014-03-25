@@ -7,13 +7,22 @@ OB.utils = OB.utils || {};
   OB.active_index = 0;
 
   OB.create_bookmark = function (obj) {
-    var txt   = document.createTextNode(obj.title)
-    , anchor  = document.createElement('a')
-    , item    = document.createElement('li')
-    , img     = document.createElement('img')
+    var txt
+    , anchor = document.createElement('a')
+    , item   = document.createElement('li')
+    , img    = document.createElement('img')
     ;
 
-    img.setAttribute('src', 'chrome://favicon/' + obj.url);
+    if (Browser.vendor == 'Opera') {
+      img.setAttribute('src', 'opera://favicon/' + obj.url);
+    }
+    else {
+      img.setAttribute('src', 'chrome://favicon/' + obj.url);
+    }
+
+    txt = obj.title.length > 0 ? obj.title : obj.url;
+    txt = document.createTextNode(txt);
+
 
     anchor.setAttribute('href', obj.url);
     anchor.appendChild(txt);
@@ -26,13 +35,13 @@ OB.utils = OB.utils || {};
       chrome.tabs.create({url:obj.url});
     });
 
-    document.getElementById('bookmark-view').appendChild(item);
+    document.querySelector('#search-result ul').appendChild(item);
   };
 
 
   OB.create_folder = function (obj) {
-    var txt      = document.createTextNode(obj.title)
-    , option     = document.createElement('option');
+    var txt  = document.createTextNode(obj.title)
+    , option = document.createElement('option');
 
     option.setAttribute('data-id', obj.id);
     option.setAttribute('id', 'folder_' + obj.id);
@@ -88,11 +97,13 @@ OB.utils = OB.utils || {};
   };
 
   OB.search_bookmarks = function (string) {
+    var that = this;
     chrome.bookmarks.search(string, function (results) {
-      document.getElementById('bookmark-view').innerHTML = '';
+      document.querySelector('#search-result ul').innerHTML = '';
+
       for (var i = 0; i < results.length; i++) {
         if (results[i].url) {
-          create_bookmark(results[i]);
+          that.create_bookmark(results[i]);
         }
       }
     });
