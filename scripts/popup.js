@@ -28,7 +28,15 @@ cancel_button.addEventListener('click', function (e) {
 
 search_field.addEventListener('keyup', function(e) {
   if (search_field.value.length > 0) {
-    OB.search_bookmarks(search_field.value);
+    OB.search_bookmarks(search_field.value, function (results) {
+      document.querySelector('#search-result ul').innerHTML = '';
+
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].url) {
+          OB.create_bookmark(results[i]);
+        }
+      }
+    });
     Utils.remove_class('hidden', document.getElementById('search-result'));
   }
   else {

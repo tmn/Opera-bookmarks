@@ -99,13 +99,7 @@ OB.utils = OB.utils || {};
   OB.search_bookmarks = function (string, callback) {
     var that = this;
     chrome.bookmarks.search(string, function (results) {
-      document.querySelector('#search-result ul').innerHTML = '';
-
-      for (var i = 0; i < results.length; i++) {
-        if (results[i].url) {
-          that.create_bookmark(results[i]);
-        }
-      }
+      callback(results);
     });
   };
 
