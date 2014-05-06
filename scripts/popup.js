@@ -33,7 +33,7 @@ search_field.addEventListener('keyup', function(e) {
 
       for (var i = 0; i < results.length; i++) {
         if (results[i].url) {
-          OB.create_bookmark(results[i]);
+          OB.create_popup_bookmark(results[i]);
         }
       }
     });

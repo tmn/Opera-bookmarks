@@ -6,7 +6,7 @@ OB.utils = OB.utils || {};
 (function () {
   OB.active_index = 0;
 
-  OB.create_bookmark = function (obj) {
+  OB.create_popup_bookmark = function (obj) {
     var txt
     , anchor = document.createElement('a')
     , item   = document.createElement('li')
