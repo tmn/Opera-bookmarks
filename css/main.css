@@ -224,10 +224,21 @@ input[type=search] {
 }
   #search-result h2 {
     font-size: 11px;
-    padding: 0 0 0 10px
+    padding: 0 0 0 10px;
   }
   #search-result ul li {
     cursor: pointer;
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+  }
+    #search-result ul li:last-child {
+      border: 0;
+    }
+  #search-result ul li img {
+    float: left;
+    width: 15px;
+    height: 15px;
+    padding: 1px 7px 0 0;
   }
 
 /* Bookmark-view
