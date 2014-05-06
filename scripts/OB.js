@@ -1,10 +1,14 @@
 window.OB = window.OB || {};
 
 OB.utils = OB.utils || {};
+OB.section = OB.seciton || {};
 
 
 (function () {
   OB.active_index = 0;
+
+  OB.section.POPUP = 0;
+  OB.section.MANAGER = 1;
 
   OB.create_popup_bookmark = function (obj) {
     var txt
@@ -39,7 +43,7 @@ OB.utils = OB.utils || {};
   };
 
 
-  OB.create_folder = function (obj) {
+  OB.create_popup_folder = function (obj) {
     var txt  = document.createTextNode(obj.title)
     , option = document.createElement('option');
 
@@ -65,6 +69,26 @@ OB.utils = OB.utils || {};
       }
 
       return false;
+    });
+  };
+
+  OB.get_folders = function (element) {
+    var that = this;
+
+    chrome.bookmarks.getTree(function(bookmark_tree) {
+      var tree  = bookmark_tree[0].children;
+
+      if (element == OB.section.POPUP) {
+        // create the two main folder
+        for (var i = 0; i < tree.length; i++) {
+          that.create_popup_folder(tree[i]);
+        }
+
+        document.getElementById('add-bookmark-folders').selectedIndex = 0;
+      }
+      else if (element == OB.section.POPUP) {
+
+      }
     });
   };
 

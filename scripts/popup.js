@@ -47,16 +47,7 @@ search_field.addEventListener('keyup', function(e) {
 
 /* Fill inn root folders
 -------------------------------------------------------------------- */
-chrome.bookmarks.getTree(function(bookmark_tree) {
-  var tree  = bookmark_tree[0].children;
-
-  // create the two main folder
-  for (var i = 0; i < tree.length; i++) {
-    OB.create_folder(tree[i]);
-  }
-
-  document.getElementById('add-bookmark-folders').selectedIndex = 0;
-});
+OB.get_folders(OB.section.POPUP);
 
 /* Get information from active tab
 -------------------------------------------------------------------- */
