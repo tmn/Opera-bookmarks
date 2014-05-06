@@ -9,3 +9,110 @@ body {
 h1 {
   font-size: 18px;
 }
+
+a { text-decoration: none; }
+
+
+.btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 5px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.btn.btn-bottom {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+}
+.btn.btn-center {
+
+}
+.btn.btn-new-folder {
+  display: block;
+  width: 100%;
+
+  background: #333;
+  color: #fff;
+  border-style: dashed;
+  border-radius: 0;
+  border: 0;
+}
+.btn.btn-new-folder:hover {
+  background: #2a2a2a;
+}
+
+#left-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 250px;
+  height: 100%;
+  background: #222;
+
+  box-shadow: inset 0 -3px 0 0 #f00;
+}
+  #left-content ul {
+    list-style: none;
+    margin: 50px 0 0 0;
+  }
+
+  #left-content ul li {
+    width: 250px;
+    border-bottom: 1px solid #333;
+  }
+
+  #left-content ul li a {
+    display: block;
+    padding: 0 0 0 15px;
+    color: #fff;
+    text-decoration: none;
+    line-height: 35px;
+
+  }
+  #left-content ul li:last-child {
+    border: 0;
+  }
+
+#right-content {
+  position: relative;
+  top: 0;
+  left: 0;
+  padding-left: 250px;
+  min-width: 550px;
+}
+  #right-content header {
+    height: 65px;
+    line-height: 65px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    padding: 0 0 0 15px;
+  }
+    #right-content header h1 {
+      float: left;
+    }
+    #right-content header #search-field {
+      position: absolute;
+      top: 0;
+      right: 35px;
+    }
+      #right-content header #search-field input {
+        width: 230px;
+      }
+
+#right-content ul {
+  list-style: none;
+}
+#right-content ul li {
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 34px;
+  padding: 0 0 0 15px;
+}
+  #right-content ul li img {
+    float: left;
+    padding: 7px 10px 0 0;
+  }
+  #right-content ul li a {
+    display: block;
+  }
