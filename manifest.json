@@ -11,7 +11,9 @@
 
   "permissions":[
       "tabs",
-      "bookmarks"
+      "bookmarks",
+      "opera://favicon/",
+      "chrome://favicon/"
   ],
 
   "options_page": "options.html",
