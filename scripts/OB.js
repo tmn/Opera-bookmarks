@@ -13,7 +13,7 @@ OB.utils = OB.utils || {};
     , img    = document.createElement('img')
     ;
 
-    if (Browser.vendor == 'Opera') {
+    if (Browser.info.vendor == 'Opera') {
       img.setAttribute('src', 'opera://favicon/' + obj.url);
     }
     else {
@@ -96,7 +96,7 @@ OB.utils = OB.utils || {};
     window.close();
   };
 
-  OB.search_bookmarks = function (string) {
+  OB.search_bookmarks = function (string, callback) {
     var that = this;
     chrome.bookmarks.search(string, function (results) {
       document.querySelector('#search-result ul').innerHTML = '';
