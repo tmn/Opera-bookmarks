@@ -92,6 +92,10 @@ OB.section = OB.seciton || {};
     });
   };
 
+  OB.create_folder = function (name, parent) {
+
+  };
+
   OB.get_children = function (id) {
     this.set_active_index(id);
     document.getElementById('bookmark-view').innerHTML = '';
