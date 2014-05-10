@@ -41,6 +41,15 @@ a { text-decoration: none; }
 .btn.btn-new-folder:hover {
   background: #2a2a2a;
 }
+.btn.btn-folder-bar {
+  background: 0;
+  color: #fff;
+  border: 0;
+  border-radius: 0;
+  width: 100%;
+  text-align: left;
+  padding-left: 20px;
+}
 
 #left-content {
   position: absolute;
