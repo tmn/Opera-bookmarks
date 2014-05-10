@@ -12,6 +12,8 @@ h1 {
 
 a { text-decoration: none; }
 
+button:focus { outline: none; }
+
 
 .btn {
   border: 1px solid #ddd;
