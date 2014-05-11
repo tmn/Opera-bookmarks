@@ -48,12 +48,13 @@ OB = window.OB || {};
   };
 
   chrome.bookmarks.getTree(function (bookmarks) {
+    document.querySelector('#left-content ul').innerHTML = '';
     fill_bookmark_folder_list(bookmarks);
+    fill_new_folder_list(bookmarks);
   });
 
   var fill_bookmark_folder_list = function (bookmarks, parent_folder) {
     bookmarks.forEach(function (bookmark) {
-
       var parent = parent_folder || document.querySelector('#left-content ul');
       var li = null;
 
@@ -85,6 +86,32 @@ OB = window.OB || {};
     });
   };
 
+  var fill_new_folder_list = function (bookmarks, parent_folder) {
+    bookmarks.forEach(function (bookmark) {
+      var parent = parent_folder || document.querySelector('#left-content ul');
+      var li = null;
+
+      if (bookmark.url === null || bookmark.url === undefined) {
+        if (bookmark.title.length > 0) {
+          var txt  = document.createTextNode(bookmark.title)
+          , option = document.createElement('option');
+
+          option.setAttribute('data-id', bookmark.id);
+          option.setAttribute('id', 'folder_' + bookmark.id);
+          option.setAttribute('value', bookmark.id);
+          option.appendChild(txt);
+
+          document.getElementById('modal-new-folder-select').appendChild(option);
+        }
+      }
+
+      if (bookmark.children) {
+        parent = li;
+        fill_new_folder_list(bookmark.children, parent);
+      }
+    });
+  };
+
 
 
   /* INIT
@@ -98,7 +125,10 @@ OB = window.OB || {};
   , modal_new_folder_box = document.getElementById('modal-new-folder-box')
 
   , btn_new_folder = document.getElementById('btn-new-folder')
-  , input_new_folder = document.querySelector('#modal-new-folder-box input');
+  , modal_new_folder_input = document.querySelector('#modal-new-folder-box input')
+  , modal_new_folder_select = document.getElementById('modal-new-folder-select')
+  , modal_new_folder_create = document.getElementById('modal-new-folder-create')
+  , modal_new_folder_cancel = document.getElementById('modal-new-folder-cancel');
 
 
   /* Eventlisteners
@@ -109,16 +139,45 @@ OB = window.OB || {};
     }
   }, false);
 
+  modal_new_folder_input.addEventListener('keyup', function (e) {
+    if (e.keyCode == 13) {
+      console.log(123);
+    }
+  });
+
   modal_new_folder.addEventListener('click', function (e) {
     if (modal_new_folder.id == e.target.id) {
       this.style.display = 'none';
     }
   }, false);
 
-  btn_new_folder.addEventListener('click', function () {
-    input_new_folder.value = '';
+  btn_new_folder.addEventListener('click', function (e) {
+    modal_new_folder_input.value = '';
     modal_new_folder.style.display = 'inline';
-    input_new_folder.focus();
+    modal_new_folder_input.focus();
   }, false);
+
+  modal_new_folder_create.addEventListener('click', function (e) {
+    var name = (modal_new_folder_input.value.length === 0) ? 'New folder' : modal_new_folder_input.value;
+
+    chrome.bookmarks.create({
+      parentId: modal_new_folder_select.value,
+      title: name
+    });
+
+    document.querySelector('#left-content ul').innerHTML = '';
+    modal_new_folder_select.innerHTML = '';
+
+    chrome.bookmarks.getTree(function (bookmarks) {
+      fill_bookmark_folder_list(bookmarks);
+      fill_new_folder_list(bookmarks);
+    });
+
+    modal_new_folder.style.display = 'none';
+  });
+
+  modal_new_folder_cancel.addEventListener('click', function (e) {
+    modal_new_folder.style.display = 'none';
+  });
 
 })();
