@@ -6,14 +6,14 @@ window.Browser = window.Browser || {};
   Browser.info.vendor = null;
 
   if (navigator.userAgent.indexOf('OPR') > -1) {
-    Browser.info.vendor = 'Opera';
+    Browser.info.vendor = 'opera';
   }
   else if (navigator.userAgent.indexOf('Chrome') > -1) {
-    Browser.info.vendor = 'Chrome';
+    Browser.info.vendor = 'chrome';
   }
 
   Browser.validate = function () {
-    return Browser.info.vendor == 'Opera' || Browser.info.vendor == 'Chrome';
+    return Browser.info.vendor == 'opera' || Browser.info.vendor == 'chrome';
   };
 
   Browser.createTab = function (url) {
