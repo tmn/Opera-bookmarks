@@ -27,6 +27,7 @@ OB = window.OB || {};
 
       img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmarks[i].url);
       a.setAttribute('href', bookmarks[i].url);
+      a.setAttribute('target', '_blank');
       a.appendChild(document.createTextNode(bookmarks[i].title));
 
       li.appendChild(img);
@@ -68,27 +69,36 @@ OB = window.OB || {};
 
   /* INIT
   ----------------------------------------------------------------------------*/
-
   chrome.bookmarks.getChildren(active_folder, function (children) {
     update_bookmark_path_view();
     fill_bookmarks_view(children);
   });
 
   var modal_new_folder = document.getElementById('modal-new-folder')
-  , modal_new_folder_box = document.getElementById('modal-new-folder-box');
+  , modal_new_folder_box = document.getElementById('modal-new-folder-box')
 
-  var btn_new_folder = document.getElementById('btn-new-folder');
+  , btn_new_folder = document.getElementById('btn-new-folder')
+  , input_new_folder = document.querySelector('#modal-new-folder-box input');
+
+
+  /* Eventlisteners
+  ----------------------------------------------------------------------------*/
+  document.addEventListener('keyup', function (e) {
+    if (e.keyCode == 27) {
+      modal_new_folder.style.display = 'none';
+    }
+  }, false);
 
   modal_new_folder.addEventListener('click', function (e) {
     if (modal_new_folder.id == e.target.id) {
-      this.style.display = 'none'
+      this.style.display = 'none';
     }
   }, false);
 
   btn_new_folder.addEventListener('click', function () {
+    input_new_folder.value = '';
     modal_new_folder.style.display = 'inline';
+    input_new_folder.focus();
   }, false);
-
-
 
 })();
