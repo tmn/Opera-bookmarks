@@ -47,24 +47,44 @@ OB = window.OB || {};
     });
   };
 
-  OB.get_folders(OB.section.MANAGER, function (tree) {
-    for (var t in tree) {
-      var li   = document.createElement('li')
-      , button = document.createElement('button');
-
-      button.setAttribute('data-index', tree[t].index);
-      button.setAttribute('data-id', tree[t].id);
-      button.setAttribute('id', 'folder_' + tree[t].id);
-      button.setAttribute('class', 'btn btn-folder-bar');
-
-      button.appendChild(document.createTextNode(tree[t].title));
-
-      li.appendChild(button);
-      li.addEventListener('click', folder_click);
-
-      document.querySelector('#left-content ul').appendChild(li);
-    }
+  chrome.bookmarks.getTree(function (bookmarks) {
+    fill_bookmark_folder_list(bookmarks);
   });
+
+  var fill_bookmark_folder_list = function (bookmarks, parent_folder) {
+    bookmarks.forEach(function (bookmark) {
+
+      var parent = parent_folder || document.querySelector('#left-content ul');
+      var li = null;
+
+      if (bookmark.url === null || bookmark.url === undefined) {
+        if (bookmark.title.length > 0) {
+
+          li   = document.createElement('li');
+
+          var button = document.createElement('button');
+
+          button.setAttribute('data-index', bookmark.index);
+          button.setAttribute('data-id', bookmark.id);
+          button.setAttribute('id', 'folder_' + bookmark.id);
+          button.setAttribute('class', 'btn btn-folder-bar');
+
+          button.appendChild(document.createTextNode(bookmark.title));
+
+          li.appendChild(button);
+          li.addEventListener('click', folder_click);
+
+          parent.appendChild(li);
+        }
+      }
+
+      if (bookmark.children) {
+        parent = li;
+        fill_bookmark_folder_list(bookmark.children, parent);
+      }
+    });
+  };
+
 
 
   /* INIT
