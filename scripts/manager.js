@@ -20,24 +20,35 @@ OB = window.OB || {};
       return;
     }
 
-    for (var i in bookmarks) {
+    bookmarks.forEach(function (bookmark) {
       var li = document.createElement('li');
       var a = document.createElement('a');
       var img = document.createElement('img');
 
-      img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmarks[i].url);
-      a.setAttribute('href', bookmarks[i].url);
+      img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
+      a.setAttribute('href', bookmark.url);
       a.setAttribute('target', '_blank');
-      a.appendChild(document.createTextNode(bookmarks[i].title));
+      a.appendChild(document.createTextNode(bookmark.title));
 
       li.appendChild(img);
       li.appendChild(a);
 
-      bookmark_list.appendChild(li);
-    }
+      if (bookmark.url === null || bookmark.url === undefined) {
+        img.setAttribute('src', '/media/folder.png');
+        a.setAttribute('data-id', bookmark.id);
+        a.addEventListener('click', folder_click);
+        bookmark_list.insertBefore(li, bookmark_list.children[0]);
+      }
+      else {
+        bookmark_list.appendChild(li);
+      }
+    });
+
   };
 
   var folder_click = function (e) {
+    e.preventDefault();
+
     active_folder = e.target.dataset.id + '';
 
     update_bookmark_path_view();
