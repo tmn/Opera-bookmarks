@@ -100,7 +100,6 @@ button:focus { outline: none; }
   #right-content header {
     height: 65px;
     line-height: 65px;
-    border-bottom: 1px solid #ddd;
     box-sizing: border-box;
     padding: 0 0 0 15px;
   }
