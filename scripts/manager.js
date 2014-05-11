@@ -12,7 +12,7 @@ OB = window.OB || {};
   };
 
   var fill_bookmarks_view = function (bookmarks) {
-    var bookmark_list = document.querySelector('#right-content div ul');
+    var bookmark_list = document.querySelector('#right-content ul');
     bookmark_list.innerHTML = '';
 
     if (bookmarks.length === 0) {
