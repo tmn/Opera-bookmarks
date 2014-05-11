@@ -3,9 +3,22 @@ OB = window.OB || {};
 (function () {
   var active_folder = '1';
 
+  var update_bookmark_path_view = function () {
+    var bookmark_path = document.getElementById('bookmark-path');
+
+    chrome.bookmarks.get(active_folder, function (folder) {
+      bookmark_path.innerHTML = folder[0].title;
+    });
+  };
+
   var fill_bookmarks_view = function (bookmarks) {
     var bookmark_list = document.querySelector('#right-content div ul');
     bookmark_list.innerHTML = '';
+
+    if (bookmarks.length === 0) {
+      bookmark_list.innerHTML = '<li>No bookmarks found</li>';
+      return;
+    }
 
     for (var i in bookmarks) {
       var li = document.createElement('li');
@@ -25,6 +38,9 @@ OB = window.OB || {};
 
   var folder_click = function (e) {
     active_folder = e.target.dataset.id + '';
+
+    update_bookmark_path_view();
+
     chrome.bookmarks.getChildren(e.target.dataset.id, function (children) {
       fill_bookmarks_view(children);
     });
@@ -52,9 +68,10 @@ OB = window.OB || {};
 
   /* INIT
   ----------------------------------------------------------------------------*/
+
   chrome.bookmarks.getChildren(active_folder, function (children) {
+    update_bookmark_path_view();
     fill_bookmarks_view(children);
   });
-
 
 })();
