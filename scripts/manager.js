@@ -7,6 +7,7 @@ OB = window.OB || {};
   , modal_new_folder_box = document.getElementById('modal-new-folder-box')
 
   , btn_new_folder = document.getElementById('btn-new-folder')
+  , left_folder_list = document.querySelector('#left-content ul')
   , modal_new_folder_input = document.querySelector('#modal-new-folder-box input')
   , modal_new_folder_select = document.getElementById('modal-new-folder-select')
   , modal_new_folder_create = document.getElementById('modal-new-folder-create')
@@ -20,6 +21,10 @@ OB = window.OB || {};
       title: name
     });
 
+    refresh_folder_view();
+  };
+
+  var refresh_folder_view = function () {
     document.querySelector('#left-content ul').innerHTML = '';
     modal_new_folder_select.innerHTML = '';
 
@@ -170,6 +175,12 @@ OB = window.OB || {};
       modal_new_folder.style.display = 'none';
     }
   }, false);
+
+  left_folder_list.addEventListener('contextmenu', function (e) {
+    console.log(e.target.id);
+
+    window.event.returnValue = false;
+  });
 
   modal_new_folder_input.addEventListener('keyup', function (e) {
     if (e.keyCode == 13) {
