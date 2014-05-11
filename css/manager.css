@@ -2,16 +2,16 @@ body {
   font: 12px/18px "Lucida Grande", arial, sans-serif;
 }
 
-
-
 /* HEADER
 -------------------------------------------------------------------------- */
 h1 {
   font-size: 18px;
 }
 
-a { text-decoration: none; color: #1970ad; }
-a:hover { color: #0e324b; }
+a { text-decoration: none; color: #222; }
+a:hover { color: #666; }
+a[data-id] { color: #1970ad; }
+a[data-id]:hover { color: #0e324b; }
 
 button:focus { outline: none; }
 
