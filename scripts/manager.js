@@ -74,4 +74,21 @@ OB = window.OB || {};
     fill_bookmarks_view(children);
   });
 
+  var modal_new_folder = document.getElementById('modal-new-folder')
+  , modal_new_folder_box = document.getElementById('modal-new-folder-box');
+
+  var btn_new_folder = document.getElementById('btn-new-folder');
+
+  modal_new_folder.addEventListener('click', function (e) {
+    if (modal_new_folder.id == e.target.id) {
+      this.style.display = 'none'
+    }
+  }, false);
+
+  btn_new_folder.addEventListener('click', function () {
+    modal_new_folder.style.display = 'inline';
+  }, false);
+
+
+
 })();
