@@ -78,6 +78,14 @@ button:focus { outline: none; }
     border-bottom: 1px solid #333;
   }
 
+  #left-content ul li button {
+    margin: 0;
+  }
+  #left-content ul li button:hover,
+  #left-content ul li button.active {
+    background: #f00;
+  }
+
   #left-content ul li a {
     display: block;
     padding: 0 0 0 15px;
@@ -185,4 +193,34 @@ button:focus { outline: none; }
     width: 100%;
     box-sizing: border-box;
     padding: 6px 8px;
+  }
+
+
+
+.context-menu {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  background: #fff;
+  border-radius: 3px;
+  box-sizing: border-box;
+  padding: 3px 0;
+  width: 150px;
+  display: none;
+
+  box-shadow: 1px 1px 10px #222;
+}
+
+.context-menu button {
+  border: 0;
+  background: #fff;
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 5px 10px;
+}
+  .context-menu button:hover {
+    background: #f00;
+    color: #fff;
   }
