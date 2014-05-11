@@ -16,8 +16,6 @@
       "chrome://favicon/"
   ],
 
-  "options_page": "options.html",
-
   "background": {"scripts": ["scripts/background.js"]},
 
   "icons": {
