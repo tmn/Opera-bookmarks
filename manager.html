@@ -10,7 +10,7 @@
 
   <section id="left-content">
     <ul></ul>
-    <button class="btn btn-bottom btm-center btn-new-folder">New folder</button>
+    <button id="btn-new-folder" class="btn btn-bottom btm-center btn-new-folder">New folder</button>
   </section>
 
   <section id="right-content">
@@ -25,6 +25,23 @@
 
     <ul></ul>
   </section>
+
+  <div id="modal-new-folder">
+    <div id="modal-new-folder-box">
+      <h1>New folder</h1>
+
+      <input type="text" name="" placeholder="Folder name">
+
+      <h2>Parent folder</h2>
+      <select>
+        <option>Bookmark bar</option>
+      </select>
+
+      <div id="modal-new-folder-box-buttons">
+        <button class="btn">Create folder</button><button class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <script src="scripts/browser.js"></script>
   <script src="scripts/OB.js"></script>
