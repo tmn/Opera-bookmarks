@@ -93,27 +93,18 @@ OB.section = OB.seciton || {};
   };
 
   OB.create_folder = function (name, parent) {
-
-  };
-
-  OB.get_children = function (id) {
-    this.set_active_index(id);
-    document.getElementById('bookmark-view').innerHTML = '';
-
-    chrome.bookmarks.getChildren("" + id, function(children) {
-      for (var i = 0; i < children.length; i++) {
-        if (children[i].url) {
-          this.create_bookmark(children[i]);
-        }
-      }
-    });
+    
   };
 
   OB.save_bookmark = function () {
     var e = document.getElementById('add-bookmark-folders');
 
     if (!OB.exists(current_page.url)) {
-      chrome.bookmarks.create({parentId:e.options[e.selectedIndex].value, title:document.getElementById('title').innerHTML, url:current_page.url});
+      chrome.bookmarks.create({
+        parentId: e.options[e.selectedIndex].value,
+        title: document.getElementById('title').innerHTML,
+        url: current_page.url
+      });
 
 
       chrome.tabs.query({currentWindow: true, active: true}, function(tab) {
