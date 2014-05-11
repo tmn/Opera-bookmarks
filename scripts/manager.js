@@ -11,7 +11,12 @@ OB = window.OB || {};
   , modal_new_folder_input = document.querySelector('#modal-new-folder-box input')
   , modal_new_folder_select = document.getElementById('modal-new-folder-select')
   , modal_new_folder_create = document.getElementById('modal-new-folder-create')
-  , modal_new_folder_cancel = document.getElementById('modal-new-folder-cancel');
+  , modal_new_folder_cancel = document.getElementById('modal-new-folder-cancel')
+  , context_menu_left = document.getElementById('context-menu-left')
+  , context_menu_delete = document.getElementById('context-menu-delete')
+  , context_menu_rename = document.getElementById('context-menu-rename');
+
+  var context_menu_left_active_id = -1;
 
   var create_folder = function () {
     var name = (modal_new_folder_input.value.length === 0) ? 'New folder' : modal_new_folder_input.value;
@@ -173,14 +178,31 @@ OB = window.OB || {};
   document.addEventListener('keyup', function (e) {
     if (e.keyCode == 27) {
       modal_new_folder.style.display = 'none';
+      context_menu_left.style.display = 'none';
     }
   }, false);
 
+  document.addEventListener('click', function (e) {
+    context_menu_left.style.display = 'none';
+  }, false);
+
+
+
   left_folder_list.addEventListener('contextmenu', function (e) {
-    console.log(e.target.id);
+    context_menu_left_active_id = e.target.dataset.id;
+
+    context_menu_left.style.left = window.event.clientX + 'px';
+    context_menu_left.style.top = window.event.clientY + 'px';
+    context_menu_left.style.display = 'inline';
 
     window.event.returnValue = false;
   });
+
+  context_menu_delete.addEventListener('click', function (e) {
+    chrome.bookmarks.remove(context_menu_left_active_id, function () {
+      refresh_folder_view();
+    });
+  }, false);
 
   modal_new_folder_input.addEventListener('keyup', function (e) {
     if (e.keyCode == 13) {
