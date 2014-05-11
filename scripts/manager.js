@@ -53,10 +53,13 @@ OB = window.OB || {};
     fill_new_folder_list(bookmarks);
   });
 
-  var fill_bookmark_folder_list = function (bookmarks, parent_folder) {
+  var fill_bookmark_folder_list = function (bookmarks, parent_folder, step) {
+    step = step || 0;
+
     bookmarks.forEach(function (bookmark) {
       var parent = parent_folder || document.querySelector('#left-content ul');
       var li = null;
+      var steps = step;
 
       if (bookmark.url === null || bookmark.url === undefined) {
         if (bookmark.title.length > 0) {
@@ -70,7 +73,7 @@ OB = window.OB || {};
           button.setAttribute('id', 'folder_' + bookmark.id);
           button.setAttribute('class', 'btn btn-folder-bar');
 
-          button.appendChild(document.createTextNode(bookmark.title));
+          button.appendChild(document.createTextNode(new Array(steps).join('-') + ' ' + bookmark.title));
 
           li.appendChild(button);
           li.addEventListener('click', folder_click);
@@ -81,19 +84,22 @@ OB = window.OB || {};
 
       if (bookmark.children) {
         parent = li;
-        fill_bookmark_folder_list(bookmark.children, parent);
+        fill_bookmark_folder_list(bookmark.children, parent, ++steps);
       }
     });
   };
 
-  var fill_new_folder_list = function (bookmarks, parent_folder) {
+  var fill_new_folder_list = function (bookmarks, parent_folder, step) {
+    step = step || 0;
+
     bookmarks.forEach(function (bookmark) {
       var parent = parent_folder || document.querySelector('#left-content ul');
       var li = null;
+      var steps = step;
 
       if (bookmark.url === null || bookmark.url === undefined) {
         if (bookmark.title.length > 0) {
-          var txt  = document.createTextNode(bookmark.title)
+          var txt  = document.createTextNode(new Array(steps).join('-') + ' ' + bookmark.title)
           , option = document.createElement('option');
 
           option.setAttribute('data-id', bookmark.id);
@@ -107,7 +113,7 @@ OB = window.OB || {};
 
       if (bookmark.children) {
         parent = li;
-        fill_new_folder_list(bookmark.children, parent);
+        fill_new_folder_list(bookmark.children, parent, ++steps);
       }
     });
   };
@@ -141,7 +147,7 @@ OB = window.OB || {};
 
   modal_new_folder_input.addEventListener('keyup', function (e) {
     if (e.keyCode == 13) {
-      console.log(123);
+
     }
   });
 
