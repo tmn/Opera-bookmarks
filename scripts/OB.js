@@ -89,10 +89,6 @@ OB.section = OB.seciton || {};
     });
   };
 
-  OB.create_folder = function (name, parent) {
-
-  };
-
   OB.save_bookmark = function () {
     var e = document.getElementById('add-bookmark-folders');
 
