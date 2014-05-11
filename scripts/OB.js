@@ -79,21 +79,18 @@ OB.section = OB.seciton || {};
       var tree  = bookmark_tree[0].children;
 
       if (element == OB.section.POPUP) {
-        // create the two main folder
+
         for (var i = 0; i < tree.length; i++) {
           that.create_popup_folder(tree[i]);
         }
 
         document.getElementById('add-bookmark-folders').selectedIndex = 0;
       }
-      else if (element == OB.section.MANAGER) {
-        callback(tree);
-      }
     });
   };
 
   OB.create_folder = function (name, parent) {
-    
+
   };
 
   OB.save_bookmark = function () {
