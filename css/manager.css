@@ -114,6 +114,12 @@ button:focus { outline: none; }
       #right-content header #search-field input {
         width: 230px;
       }
+  #right-content #bookmark-path {
+    padding: 0 0 0 15px;
+    line-height: 30px;
+    background: #e0e0e0;
+    font-size: 11px;
+  }
 
 #right-content ul {
   list-style: none;
