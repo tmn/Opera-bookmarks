@@ -5,13 +5,14 @@ OB = window.OB || {};
 
   var modal_new_folder = document.getElementById('modal-new-folder')
   , modal_new_folder_box = document.getElementById('modal-new-folder-box')
-
-  , btn_new_folder = document.getElementById('btn-new-folder')
-  , left_folder_list = document.querySelector('#left-content ul')
   , modal_new_folder_input = document.querySelector('#modal-new-folder-box input')
   , modal_new_folder_select = document.getElementById('modal-new-folder-select')
   , modal_new_folder_create = document.getElementById('modal-new-folder-create')
   , modal_new_folder_cancel = document.getElementById('modal-new-folder-cancel')
+
+  , btn_new_folder = document.getElementById('btn-new-folder')
+  , left_folder_list = document.querySelector('#left-content ul')
+  , right_bookmark_list = document.querySelector('#right-content ul')
   , context_menu_left = document.getElementById('context-menu-left')
   , context_menu_delete = document.getElementById('context-menu-delete')
   , context_menu_rename = document.getElementById('context-menu-rename');
@@ -26,16 +27,21 @@ OB = window.OB || {};
       title: name
     });
 
-    refresh_folder_view();
+    refresh_view();
   };
 
-  var refresh_folder_view = function () {
-    document.querySelector('#left-content ul').innerHTML = '';
+  var refresh_view = function () {
+    left_folder_list.innerHTML = '';
+
     modal_new_folder_select.innerHTML = '';
 
     chrome.bookmarks.getTree(function (bookmarks) {
       fill_bookmark_folder_list(bookmarks);
       fill_new_folder_list(bookmarks);
+    });
+
+    chrome.bookmarks.getChildren(active_folder, function (children) {
+      fill_bookmarks_view(children);
     });
   };
 
@@ -48,11 +54,10 @@ OB = window.OB || {};
   };
 
   var fill_bookmarks_view = function (bookmarks) {
-    var bookmark_list = document.querySelector('#right-content ul');
-    bookmark_list.innerHTML = '';
+    right_bookmark_list.innerHTML = '';
 
     if (bookmarks.length === 0) {
-      bookmark_list.innerHTML = '<li>No bookmarks found</li>';
+      right_bookmark_list.innerHTML = '<li>No bookmarks found</li>';
       return;
     }
 
@@ -63,8 +68,8 @@ OB = window.OB || {};
 
       img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
       a.setAttribute('href', bookmark.url);
-      a.setAttribute('target', '_blank');
-      a.appendChild(document.createTextNode(bookmark.title));
+      a.setAttribute('data-id', bookmark.id);
+      a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
 
       li.appendChild(img);
       li.appendChild(a);
@@ -73,10 +78,11 @@ OB = window.OB || {};
         img.setAttribute('src', '/media/folder.png');
         a.setAttribute('data-id', bookmark.id);
         a.addEventListener('click', folder_click);
-        bookmark_list.insertBefore(li, bookmark_list.children[0]);
+        right_bookmark_list.insertBefore(li, right_bookmark_list.children[0]);
       }
       else {
-        bookmark_list.appendChild(li);
+        a.setAttribute('target', '_blank');
+        right_bookmark_list.appendChild(li);
       }
     });
 
@@ -94,17 +100,11 @@ OB = window.OB || {};
     });
   };
 
-  chrome.bookmarks.getTree(function (bookmarks) {
-    document.querySelector('#left-content ul').innerHTML = '';
-    fill_bookmark_folder_list(bookmarks);
-    fill_new_folder_list(bookmarks);
-  });
-
   var fill_bookmark_folder_list = function (bookmarks, parent_folder, step) {
     step = step || 0;
 
     bookmarks.forEach(function (bookmark) {
-      var parent = parent_folder || document.querySelector('#left-content ul');
+      var parent = parent_folder || left_folder_list;
       var li = null;
       var steps = step;
 
@@ -120,7 +120,12 @@ OB = window.OB || {};
           button.setAttribute('id', 'folder_' + bookmark.id);
           button.setAttribute('class', 'btn btn-folder-bar');
 
-          button.appendChild(document.createTextNode(new Array(steps).join('-') + ' ' + bookmark.title));
+          var separator = (steps-1) > 0 ? '˪' : '';
+
+          if ((steps-1) > 0) {
+            button.innerHTML = '<span style="position: relative; top: -3px; padding-right: 5px; padding-left: '+ ((steps-1)*10) +'px;">˪</span> ';
+          }
+          button.innerHTML = button.innerHTML + bookmark.title;
 
           li.appendChild(button);
           li.addEventListener('click', folder_click);
@@ -168,6 +173,11 @@ OB = window.OB || {};
 
   /* INIT
   ----------------------------------------------------------------------------*/
+  chrome.bookmarks.getTree(function (bookmarks) {
+    fill_bookmark_folder_list(bookmarks);
+    fill_new_folder_list(bookmarks);
+  });
+
   chrome.bookmarks.getChildren(active_folder, function (children) {
     update_bookmark_path_view();
     fill_bookmarks_view(children);
@@ -187,8 +197,7 @@ OB = window.OB || {};
   }, false);
 
 
-
-  left_folder_list.addEventListener('contextmenu', function (e) {
+  var show_context_menu = function (e) {
     context_menu_left_active_id = e.target.dataset.id;
 
     context_menu_left.style.left = window.event.clientX + 'px';
@@ -196,11 +205,14 @@ OB = window.OB || {};
     context_menu_left.style.display = 'inline';
 
     window.event.returnValue = false;
-  });
+  };
+
+  left_folder_list.addEventListener('contextmenu', show_context_menu, false);
+  right_bookmark_list.addEventListener('contextmenu', show_context_menu, false);
 
   context_menu_delete.addEventListener('click', function (e) {
     chrome.bookmarks.remove(context_menu_left_active_id, function () {
-      refresh_folder_view();
+      refresh_view();
     });
   }, false);
 
