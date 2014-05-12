@@ -42,19 +42,6 @@ OB.section = OB.seciton || {};
     document.querySelector('#search-result ul').appendChild(item);
   };
 
-
-  OB.create_popup_folder = function (obj) {
-    var txt  = document.createTextNode(obj.title)
-    , option = document.createElement('option');
-
-    option.setAttribute('data-id', obj.id);
-    option.setAttribute('id', 'folder_' + obj.id);
-    option.setAttribute('value', obj.id);
-    option.appendChild(txt);
-
-    document.getElementById('add-bookmark-folders').appendChild(option);
-  };
-
   OB.delete_bookmark = function (id) {
     Utils.add_class('hidden', document.getElementById('mark_' + id));
     chrome.bookmarks.remove(id);
@@ -69,23 +56,6 @@ OB.section = OB.seciton || {};
       }
 
       return false;
-    });
-  };
-
-  OB.get_folders = function (element, callback) {
-    var that = this;
-
-    chrome.bookmarks.getTree(function(bookmark_tree) {
-      var tree  = bookmark_tree[0].children;
-
-      if (element == OB.section.POPUP) {
-
-        for (var i = 0; i < tree.length; i++) {
-          that.create_popup_folder(tree[i]);
-        }
-
-        document.getElementById('add-bookmark-folders').selectedIndex = 0;
-      }
     });
   };
 

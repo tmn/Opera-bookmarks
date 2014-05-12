@@ -47,7 +47,44 @@ search_field.addEventListener('keyup', function(e) {
 
 /* Fill inn root folders
 -------------------------------------------------------------------- */
-OB.get_folders(OB.section.POPUP);
+// OB.get_folders(OB.section.POPUP);
+var fill_folder_selection_list = function (bookmarks, parent_folder, step) {
+  step = step || 0;
+
+  bookmarks.forEach(function (bookmark) {
+    var parent = parent_folder || document.querySelector('#left-content ul');
+    var li = null;
+    var steps = step;
+
+    if (bookmark.url === null || bookmark.url === undefined) {
+      console.log(bookmark);
+      if (bookmark.title.length > 0) {
+
+        var txt  = document.createTextNode(new Array(steps).join('-') + ' ' + bookmark.title)
+        , option = document.createElement('option');
+
+        option.setAttribute('data-id', bookmark.id);
+        option.setAttribute('id', 'folder_' + bookmark.id);
+        option.setAttribute('value', bookmark.id);
+        option.appendChild(txt);
+
+        document.getElementById('add-bookmark-folders').appendChild(option);
+      }
+    }
+
+    document.getElementById('add-bookmark-folders').selectedIndex = 0;
+
+    if (bookmark.children) {
+      parent = li;
+      fill_folder_selection_list(bookmark.children, parent, ++steps);
+    }
+  });
+};
+
+chrome.bookmarks.getTree(function (bookmarks) {
+  console.log('asdf');
+  fill_folder_selection_list(bookmarks);
+});
 
 /* Get information from active tab
 -------------------------------------------------------------------- */
@@ -69,10 +106,10 @@ link_manager.addEventListener('click', function (e) {
   Browser.createTab(link_manager.dataset.site + ".html");
 });
 
-link_options.addEventListener('click', function (e) {
-  e.preventDefault();
-  Browser.createTab(link_options.dataset.site + ".html");
-});
+// link_options.addEventListener('click', function (e) {
+//   e.preventDefault();
+//   Browser.createTab(link_options.dataset.site + ".html");
+// });
 
 link_help.addEventListener('click', function (e) {
   e.preventDefault();
