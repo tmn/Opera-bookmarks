@@ -10,8 +10,8 @@ h1 {
 
 a { text-decoration: none; color: #222; }
 a:hover { color: #666; }
-a[data-id] { color: #1970ad; }
-a[data-id]:hover { color: #0e324b; }
+a[target=_blank] { color: #1970ad; }
+a[target=_blank]:hover { color: #0e324b; }
 
 button:focus { outline: none; }
 
