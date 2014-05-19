@@ -65,7 +65,7 @@ OB.section = OB.seciton || {};
     if (!OB.exists(current_page.url)) {
       chrome.bookmarks.create({
         parentId: e.options[e.selectedIndex].value,
-        title: document.getElementById('title').innerHTML,
+        title: document.getElementById('title').value,
         url: current_page.url
       });
 
