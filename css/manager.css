@@ -224,3 +224,6 @@ button:focus { outline: none; }
     background: #f00;
     color: #fff;
   }
+
+
+.hidden { display: none; }
