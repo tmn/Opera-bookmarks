@@ -15,7 +15,11 @@ OB = window.OB || {};
   , right_bookmark_list = document.querySelector('#right-content ul')
   , context_menu_left = document.getElementById('context-menu-left')
   , context_menu_delete = document.getElementById('context-menu-delete')
-  , context_menu_rename = document.getElementById('context-menu-rename');
+  , context_menu_rename = document.getElementById('context-menu-rename')
+
+  , drag
+  , drop
+  , allow_drop;
 
   var context_menu_left_active_id = -1;
 
@@ -53,6 +57,7 @@ OB = window.OB || {};
     });
   };
 
+
   var fill_bookmarks_view = function (bookmarks) {
     right_bookmark_list.innerHTML = '';
 
@@ -69,7 +74,10 @@ OB = window.OB || {};
       img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
       a.setAttribute('href', bookmark.url);
       a.setAttribute('data-id', bookmark.id);
+      a.setAttribute('id', 'bm_' + bookmark.id);
+      a.setAttribute('draggable', true);
       a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
+
 
       li.appendChild(img);
       li.appendChild(a);
@@ -82,6 +90,7 @@ OB = window.OB || {};
       }
       else {
         a.setAttribute('target', '_blank');
+        a.addEventListener('dragstart', drag);
         right_bookmark_list.appendChild(li);
       }
     });
@@ -129,6 +138,8 @@ OB = window.OB || {};
 
           li.appendChild(button);
           li.addEventListener('click', folder_click);
+          li.addEventListener('drop', drop);
+          li.addEventListener('dragover', allow_drop);
 
           parent.appendChild(li);
         }
@@ -171,6 +182,9 @@ OB = window.OB || {};
   };
 
 
+
+
+
   /* INIT
   ----------------------------------------------------------------------------*/
   chrome.bookmarks.getTree(function (bookmarks) {
@@ -182,6 +196,36 @@ OB = window.OB || {};
     update_bookmark_path_view();
     fill_bookmarks_view(children);
   });
+
+
+  /* DRAG & DROP
+  ----------------------------------------------------------------------------*/
+
+  allow_drop = function (e) {
+    e.preventDefault();
+  };
+
+  drag = function (e) {
+
+    e.dataTransfer.setData('id', e.target.dataset.id);
+    e.dataTransfer.setData('eid', e.target.id);
+    e.dataTransfer.setData('url', e.target.href);
+    e.dataTransfer.setData('title', e.target.innerHTML);
+  };
+
+  drop = function (e) {
+    e.preventDefault();
+    var id = e.dataTransfer.getData('id');
+    var url = e.dataTransfer.getData('url');
+    var title = e.dataTransfer.getData('title');
+    var parent = e.target.dataset.id;
+    var eid = e.dataTransfer.getData('eid');
+
+    document.getElementById(eid).parentNode.style.display = 'none';
+
+    chrome.bookmarks.move(id, {parentId: parent});
+  };
+
 
   /* Eventlisteners
   ----------------------------------------------------------------------------*/
