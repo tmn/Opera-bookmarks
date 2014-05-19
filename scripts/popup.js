@@ -92,7 +92,7 @@ chrome.tabs.query({currentWindow: true, active: true}, function(tab) {
   current_page.id                            = tab[0].id;
   current_page.url                           = tab[0].url;
   current_page.title                         = tab[0].title;
-  document.getElementById('title').innerHTML = current_page.title;
+  document.getElementById('title').value     = current_page.title;
 });
 
 /* Tabs
