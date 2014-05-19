@@ -86,6 +86,8 @@ OB = window.OB || {};
         img.setAttribute('src', '/media/folder.png');
         a.setAttribute('data-id', bookmark.id);
         a.addEventListener('click', folder_click);
+        a.addEventListener('drop', drop);
+        a.addEventListener('dragover', allow_drop);
         right_bookmark_list.insertBefore(li, right_bookmark_list.children[0]);
       }
       else {
