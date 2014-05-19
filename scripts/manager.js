@@ -12,10 +12,13 @@ OB = window.OB || {};
 
   , btn_new_folder = document.getElementById('btn-new-folder')
   , left_folder_list = document.querySelector('#left-content ul')
-  , right_bookmark_list = document.querySelector('#right-content ul')
+  , right_bookmark_list = document.getElementById('manager-bookmark-list')
   , context_menu_left = document.getElementById('context-menu-left')
   , context_menu_delete = document.getElementById('context-menu-delete')
   , context_menu_rename = document.getElementById('context-menu-rename')
+
+  , manager_search_result = document.getElementById('manager-search-results')
+  , manager_search_field = document.getElementById('search-field').children[0]
 
   , drag
   , drop
@@ -288,6 +291,39 @@ OB = window.OB || {};
 
   modal_new_folder_cancel.addEventListener('click', function (e) {
     modal_new_folder.style.display = 'none';
+  });
+
+  manager_search_field.addEventListener('keyup', function(e) {
+    if (manager_search_field.value.length > 0) {
+      chrome.bookmarks.search(manager_search_field.value, function (results) {
+        manager_search_result.children[0].innerHTML = '';
+
+        results.forEach(function (bookmark) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          var img = document.createElement('img');
+
+          img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
+          a.setAttribute('href', bookmark.url);
+          a.setAttribute('data-id', bookmark.id);
+          a.setAttribute('id', 'bm_' + bookmark.id);
+          a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
+
+          li.appendChild(img);
+          li.appendChild(a);
+
+          if (bookmark.url !== null && bookmark.url !== undefined) {
+            a.setAttribute('target', '_blank');
+            manager_search_result.children[0].appendChild(li);
+          }
+
+          Utils.remove_class('hidden', manager_search_result);
+        });
+      });
+    }
+    else {
+      Utils.add_class('hidden', manager_search_result);
+    }
   });
 
 })();
