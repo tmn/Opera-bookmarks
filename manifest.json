@@ -4,6 +4,15 @@
   "manifest_version": 2,
   "description": "The missing bookmark manager for hte Opera Browser",
 
+  "commands": {
+    "_execute_page_action": {
+      "suggested_key": {
+        "default": "Alt+Z"
+      },
+      "description": "Open oBook"
+    }
+  },
+
   "developer": {
       "name": "Tri M. Nguyen",
       "url": "http://tmn.io/"
@@ -28,15 +37,6 @@
     "default_icon": "media/bookmark_grey.png",
     "default_title": "Simply doing things",
     "default_popup": "popup.html"
-  },
-
-  "commands": {
-    "_execute_page_action": {
-      "suggested_key": {
-        "default": "Alt+D"
-      }
-    }
   }
-
 
 }
