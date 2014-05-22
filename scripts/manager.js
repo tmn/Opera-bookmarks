@@ -327,7 +327,9 @@ OB = window.OB || {};
 
 
   var show_context_menu = function (e) {
-    context_menu_left_active_id = e.target.dataset.id;
+
+
+    context_menu_left_active_id = e.target.dataset.id === undefined ? e.target.parentNode.dataset.id : e.target.dataset.id;
 
     context_menu_left.style.left = window.event.clientX + 'px';
     context_menu_left.style.top = window.event.clientY + 'px';
