@@ -7,13 +7,6 @@ OB.section = OB.seciton || {};
 (function () {
   OB.active_index = 0;
 
-  
-
-  OB.delete_bookmark = function (id) {
-    Utils.add_class('hidden', document.getElementById('mark_' + id));
-    chrome.bookmarks.remove(id);
-  };
-
   OB.exists = function (url) {
     chrome.bookmarks.search(url, function (nodes) {
       for (var i = 0; i < nodes.length; i++) {
