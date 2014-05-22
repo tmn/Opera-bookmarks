@@ -86,6 +86,29 @@ OB = window.OB || {};
       return;
     }
 
+
+    bookmarks.sort(function (a, b) {
+      var n_a, n_b;
+
+      if (document.getElementById('sort-by').selectedIndex === sort.NAME) {
+        n_a = a.title.toUpperCase();
+        n_b = b.title.toUpperCase();
+      }
+      else if (document.getElementById('sort-by').selectedIndex === sort.DATE) {
+        n_a = a.dateAdded;
+        n_b = b.dateAdded;
+      }
+
+      if (n_a < n_b) {
+        return (a.url) ? -1 : 1;
+      }
+      else if (n_a > n_b) {
+        return (b.url) ? 1 : -1;
+      }
+
+      return 0;
+    });
+
     bookmarks.forEach(function (bookmark) {
       create_bookmark_element(bookmark, right_bookmark_list);
     });
@@ -226,29 +249,12 @@ OB = window.OB || {};
     chrome.bookmarks.move(id, {parentId: parent});
   };
 
-  var sort_by = function (option) {
 
-    if (option === sort.NAME) {
-      var bookmarks = document.querySelectorAll('a[data-type="bookmark"] span:nth-child(1)');
-
-
-
-      // for (var i = 0; i < bookmarks.length; i++) {
-      //   console.log(bookmarks[i].innerText);
-      // }
-
-      console.log(bookmarks);
-    }
-    else if (option === sort.DATE) {
-
-    }
-
-  };
-
-  // document.getElementById('sort-by').addEventListener('change', function (e) {
-  //   console.log(e);
-  //   sort_by(0);
-  // });
+  document.getElementById('sort-by').addEventListener('change', function (e) {
+    chrome.bookmarks.getChildren(active_folder, function (children) {
+      fill_bookmarks_view(children);
+    });
+  });
 
 
   /* Eventlisteners
