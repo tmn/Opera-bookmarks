@@ -155,6 +155,8 @@ button:focus { outline: none; }
 #right-content ul li {
   border-bottom: 1px solid #f0f0f0;
   line-height: 34px;
+  height: 34px;
+  overflow: hidden;
   padding: 0 0 0 15px;
 }
   #right-content ul li img {
