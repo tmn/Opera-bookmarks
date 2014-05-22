@@ -229,10 +229,11 @@ OB = window.OB || {};
   };
 
   drag = function (e) {
-    e.dataTransfer.setData('id', e.target.dataset.id);
+    var tmp_e = e.target.dataset.id === undefined ? e.target.parentNode : e.target;
 
-    e.dataTransfer.setData('url', e.target.href);
-    e.dataTransfer.setData('title', e.target.innerHTML);
+    e.dataTransfer.setData('id', tmp_e.dataset.id);
+    e.dataTransfer.setData('url', tmp_e.href);
+    e.dataTransfer.setData('title', tmp_e.innerHTML);
   };
 
   drop = function (e) {
