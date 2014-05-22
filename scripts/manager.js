@@ -33,33 +33,39 @@ OB = window.OB || {};
       parentId: modal_new_folder_select.value,
       title: name
     });
-
-    refresh_view();
   };
 
+  var create_bookmark_element = function (bookmark, parent) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    var img = document.createElement('img');
+
+    img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
+    a.setAttribute('href', bookmark.url);
+    a.setAttribute('data-id', bookmark.id);
+
+    a.setAttribute('draggable', true);
+    a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
 
 
-  var refresh_view = function () {
-    left_folder_list.innerHTML = '';
+    li.appendChild(img);
+    li.appendChild(a);
 
-    modal_new_folder_select.innerHTML = '';
+    if (bookmark.url === null || bookmark.url === undefined) {
+      img.setAttribute('src', '/media/folder.png');
+      a.setAttribute('data-id', bookmark.id);
 
-    chrome.bookmarks.getTree(function (bookmarks) {
-      fill_bookmark_folder_list(bookmarks);
-      fill_new_folder_list(bookmarks);
-    });
+      a.addEventListener('click', folder_click);
+      a.addEventListener('drop', drop);
+      a.addEventListener('dragover', allow_drop);
+      parent.insertBefore(li, parent.children[0]);
+    }
+    else {
+      a.setAttribute('target', '_blank');
 
-    chrome.bookmarks.getChildren(active_folder, function (children) {
-      fill_bookmarks_view(children);
-    });
-  };
-
-  var update_bookmark_path_view = function () {
-    var bookmark_path = document.getElementById('bookmark-path');
-
-    chrome.bookmarks.get(active_folder, function (folder) {
-      bookmark_path.innerHTML = folder[0].title;
-    });
+      a.addEventListener('dragstart', drag);
+      parent.appendChild(li);
+    }
   };
 
 
@@ -72,47 +78,7 @@ OB = window.OB || {};
     }
 
     bookmarks.forEach(function (bookmark) {
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      var img = document.createElement('img');
-
-      img.setAttribute('src', Browser.info.vendor + '://favicon/' + bookmark.url);
-      a.setAttribute('href', bookmark.url);
-      a.setAttribute('data-id', bookmark.id);
-      a.setAttribute('id', 'bm_' + bookmark.id);
-      a.setAttribute('draggable', true);
-      a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
-
-
-      li.appendChild(img);
-      li.appendChild(a);
-
-      if (bookmark.url === null || bookmark.url === undefined) {
-        img.setAttribute('src', '/media/folder.png');
-        a.setAttribute('data-id', bookmark.id);
-        a.addEventListener('click', folder_click);
-        a.addEventListener('drop', drop);
-        a.addEventListener('dragover', allow_drop);
-        right_bookmark_list.insertBefore(li, right_bookmark_list.children[0]);
-      }
-      else {
-        a.setAttribute('target', '_blank');
-        a.addEventListener('dragstart', drag);
-        right_bookmark_list.appendChild(li);
-      }
-    });
-
-  };
-
-  var folder_click = function (e) {
-    e.preventDefault();
-
-    active_folder = e.target.dataset.id + '';
-
-    update_bookmark_path_view();
-
-    chrome.bookmarks.getChildren(e.target.dataset.id, function (children) {
-      fill_bookmarks_view(children);
+      create_bookmark_element(bookmark, right_bookmark_list);
     });
   };
 
@@ -133,7 +99,7 @@ OB = window.OB || {};
 
           button.setAttribute('data-index', bookmark.index);
           button.setAttribute('data-id', bookmark.id);
-          button.setAttribute('id', 'folder_' + bookmark.id);
+          button.setAttribute('data-steps', steps-1);
           button.setAttribute('class', 'btn btn-folder-bar');
 
           var separator = (steps-1) > 0 ? '˪' : '';
@@ -188,7 +154,25 @@ OB = window.OB || {};
     });
   };
 
+  var folder_click = function (e) {
+    e.preventDefault();
 
+    active_folder = e.target.dataset.id + '';
+
+    update_bookmark_path_view();
+
+    chrome.bookmarks.getChildren(e.target.dataset.id, function (children) {
+      fill_bookmarks_view(children);
+    });
+  };
+
+  var update_bookmark_path_view = function () {
+    var bookmark_path = document.getElementById('bookmark-path');
+
+    chrome.bookmarks.get(active_folder, function (folder) {
+      bookmark_path.innerHTML = folder[0].title;
+    });
+  };
 
 
 
@@ -213,7 +197,6 @@ OB = window.OB || {};
   };
 
   drag = function (e) {
-
     e.dataTransfer.setData('id', e.target.dataset.id);
     e.dataTransfer.setData('eid', e.target.id);
     e.dataTransfer.setData('url', e.target.href);
@@ -222,11 +205,12 @@ OB = window.OB || {};
 
   drop = function (e) {
     e.preventDefault();
-    var id = e.dataTransfer.getData('id');
-    var url = e.dataTransfer.getData('url');
-    var title = e.dataTransfer.getData('title');
-    var parent = e.target.dataset.id;
-    var eid = e.dataTransfer.getData('eid');
+
+    var id = e.dataTransfer.getData('id')
+    , url = e.dataTransfer.getData('url')
+    , title = e.dataTransfer.getData('title')
+    , parent = e.target.dataset.id
+    , eid = e.dataTransfer.getData('eid');
 
     document.getElementById(eid).parentNode.style.display = 'none';
 
@@ -238,15 +222,52 @@ OB = window.OB || {};
   ----------------------------------------------------------------------------*/
 
   chrome.bookmarks.onRemoved.addListener(function (id, bookmark) {
-    var right_bookmark_view_element = document.getElementById('bm_' + id).parentNode;
-    var left_bookmark_view_element = document.getElementById('folder_' + id).parentNode;
+    var elements = document.querySelectorAll('button[data-id="'+id+'"], a[data-id="'+id+'"]');
+    var options = document.querySelectorAll('option[data-id="'+id+'"]');
 
-    right_bookmark_view_element.style.display = 'none';
-    left_bookmark_view_element.style.display = 'none';
+    var i;
+    for (i = 0; i < elements.length; i++) {
+      elements[i].parentNode.style.display = 'none';
+    }
+
+    for (i = 0; i < options.length; i++) {
+      options[i].parentNode.removeChild(options[i]);
+    }
   });
 
   chrome.bookmarks.onCreated.addListener(function (id, bookmark) {
-    // TODO
+    if (active_folder == bookmark.parentId) {
+      create_bookmark_element(bookmark, right_bookmark_list);
+    }
+
+    if (bookmark.parentId) {
+      var steps = document.querySelector('button[data-id="'+bookmark.parentId+'"]').dataset.id;
+
+      chrome.bookmarks.get(bookmark.parentId, function (parent) {
+        var li   = document.createElement('li');
+        var button = document.createElement('button');
+
+        button.setAttribute('data-index', bookmark.index);
+        button.setAttribute('data-id', bookmark.id);
+        button.setAttribute('data-steps', steps);
+        button.setAttribute('class', 'btn btn-folder-bar');
+
+        if ((steps) > 0) {
+          button.innerHTML = '<span style="position: relative; top: -3px; padding-right: 5px; padding-left: '+ ((steps)*10) +'px;">˪</span> ';
+        }
+        button.innerHTML = button.innerHTML + bookmark.title;
+
+        li.appendChild(button);
+
+        li.addEventListener('click', folder_click);
+        li.addEventListener('drop', drop);
+        li.addEventListener('dragover', allow_drop);
+
+        var e = document.querySelector('#left-content button[data-id="'+parent[0].id+'"]').parentNode;
+        e.appendChild(li);
+      });
+
+    }
   });
 
   chrome.bookmarks.onMoved.addListener(function (id, move_info) {
