@@ -189,11 +189,13 @@ OB = window.OB || {};
   var folder_click = function (e) {
     e.preventDefault();
 
-    active_folder = e.target.dataset.id + '';
+    var tmp_e = e.target.dataset.id === undefined ? e.target.parentNode : e.target;
+
+    active_folder = tmp_e.dataset.id + '';
 
     update_bookmark_path_view();
 
-    chrome.bookmarks.getChildren(e.target.dataset.id, function (children) {
+    chrome.bookmarks.getChildren(tmp_e.dataset.id, function (children) {
       fill_bookmarks_view(children);
     });
   };
