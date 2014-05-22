@@ -37,6 +37,8 @@ OB = window.OB || {};
     refresh_view();
   };
 
+
+
   var refresh_view = function () {
     left_folder_list.innerHTML = '';
 
@@ -234,6 +236,24 @@ OB = window.OB || {};
 
   /* Eventlisteners
   ----------------------------------------------------------------------------*/
+
+  chrome.bookmarks.onRemoved.addListener(function (id, bookmark) {
+    var right_bookmark_view_element = document.getElementById('bm_' + id).parentNode;
+    var left_bookmark_view_element = document.getElementById('folder_' + id).parentNode;
+
+    right_bookmark_view_element.style.display = 'none';
+    left_bookmark_view_element.style.display = 'none';
+  });
+
+  chrome.bookmarks.onCreated.addListener(function (id, bookmark) {
+    // TODO
+  });
+
+  chrome.bookmarks.onMoved.addListener(function (id, move_info) {
+    // TODO
+  });
+
+
   document.addEventListener('keyup', function (e) {
     if (e.keyCode == 27) {
       modal_new_folder.style.display = 'none';
@@ -260,9 +280,7 @@ OB = window.OB || {};
   right_bookmark_list.addEventListener('contextmenu', show_context_menu, false);
 
   context_menu_delete.addEventListener('click', function (e) {
-    chrome.bookmarks.remove(context_menu_left_active_id, function () {
-      refresh_view();
-    });
+    chrome.bookmarks.remove(context_menu_left_active_id);
   }, false);
 
   modal_new_folder_input.addEventListener('keyup', function (e) {
