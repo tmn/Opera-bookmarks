@@ -16,11 +16,13 @@ a[target=_blank]:hover { color: #0e324b; }
 #manager-bookmark-list a {
   overflow: hidden;
 }
-#manager-bookmark-list a span:nth-child(2) {
+#manager-bookmark-list a span:nth-child(2),
+#manager-search-results a span:nth-child(2) {
   color: #eee;
   padding: 0 0 0 15px;
 }
-#manager-bookmark-list a:hover span:nth-child(2) {
+#manager-bookmark-list a:hover span:nth-child(2),
+#manager-search-results a:hover span:nth-child(2) {
   color: #aaa;
 }
 
