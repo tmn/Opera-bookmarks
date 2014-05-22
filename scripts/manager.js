@@ -24,6 +24,11 @@ OB = window.OB || {};
   , drop
   , allow_drop;
 
+  var sort = {
+    NAME: 0,
+    DATE: 1
+  };
+
   var context_menu_left_active_id = -1;
 
   var create_folder = function () {
@@ -45,7 +50,7 @@ OB = window.OB || {};
     a.setAttribute('data-id', bookmark.id);
 
     a.setAttribute('draggable', true);
-    a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
+    a.innerHTML = '<span>' + bookmark.title || '(no name)' + '</span>';
 
 
     li.appendChild(img);
@@ -53,7 +58,7 @@ OB = window.OB || {};
 
     if (bookmark.url === null || bookmark.url === undefined) {
       img.setAttribute('src', '/media/folder.png');
-      a.setAttribute('data-id', bookmark.id);
+      a.setAttribute('data-type', 'folder');
 
       a.addEventListener('click', folder_click);
       a.addEventListener('drop', drop);
@@ -62,8 +67,12 @@ OB = window.OB || {};
     }
     else {
       a.setAttribute('target', '_blank');
-
+      a.setAttribute('data-type', 'bookmark');
       a.addEventListener('dragstart', drag);
+
+      var span = document.createElement('span');
+      span.appendChild(document.createTextNode(bookmark.url));
+      a.appendChild(span);
       parent.appendChild(li);
     }
   };
@@ -167,7 +176,7 @@ OB = window.OB || {};
   };
 
   var update_bookmark_path_view = function () {
-    var bookmark_path = document.getElementById('bookmark-path');
+    var bookmark_path = document.getElementById('bookmark-path-content');
 
     chrome.bookmarks.get(active_folder, function (folder) {
       bookmark_path.innerHTML = folder[0].title;
@@ -198,7 +207,7 @@ OB = window.OB || {};
 
   drag = function (e) {
     e.dataTransfer.setData('id', e.target.dataset.id);
-    e.dataTransfer.setData('eid', e.target.id);
+
     e.dataTransfer.setData('url', e.target.href);
     e.dataTransfer.setData('title', e.target.innerHTML);
   };
@@ -210,12 +219,36 @@ OB = window.OB || {};
     , url = e.dataTransfer.getData('url')
     , title = e.dataTransfer.getData('title')
     , parent = e.target.dataset.id
-    , eid = e.dataTransfer.getData('eid');
+    , eid = document.querySelector('#manager-bookmark-list a[data-id="'+id+'"]');
 
-    document.getElementById(eid).parentNode.style.display = 'none';
+    eid.parentNode.style.display = 'none';
 
     chrome.bookmarks.move(id, {parentId: parent});
   };
+
+  var sort_by = function (option) {
+
+    if (option === sort.NAME) {
+      var bookmarks = document.querySelectorAll('a[data-type="bookmark"] span:nth-child(1)');
+
+
+
+      // for (var i = 0; i < bookmarks.length; i++) {
+      //   console.log(bookmarks[i].innerText);
+      // }
+
+      console.log(bookmarks);
+    }
+    else if (option === sort.DATE) {
+
+    }
+
+  };
+
+  document.getElementById('sort-by').addEventListener('change', function (e) {
+    console.log(e);
+    sort_by(0);
+  });
 
 
   /* Eventlisteners
