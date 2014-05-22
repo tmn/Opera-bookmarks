@@ -245,10 +245,10 @@ OB = window.OB || {};
 
   };
 
-  document.getElementById('sort-by').addEventListener('change', function (e) {
-    console.log(e);
-    sort_by(0);
-  });
+  // document.getElementById('sort-by').addEventListener('change', function (e) {
+  //   console.log(e);
+  //   sort_by(0);
+  // });
 
 
   /* Eventlisteners
@@ -379,7 +379,12 @@ OB = window.OB || {};
           a.setAttribute('href', bookmark.url);
           a.setAttribute('data-id', bookmark.id);
           a.setAttribute('id', 'bm_' + bookmark.id);
-          a.appendChild(document.createTextNode(bookmark.title || '(no name)'));
+          a.innerHTML = '<span>' + bookmark.title || '(no name)' + '</span>';
+
+          var span = document.createElement('span');
+          span.appendChild(document.createTextNode(bookmark.url));
+          a.appendChild(span);
+
 
           li.appendChild(img);
           li.appendChild(a);
