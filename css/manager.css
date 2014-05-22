@@ -13,6 +13,17 @@ a:hover { color: #666; }
 a[target=_blank] { color: #1970ad; }
 a[target=_blank]:hover { color: #0e324b; }
 
+#manager-bookmark-list a {
+  overflow: hidden;
+}
+#manager-bookmark-list a span:nth-child(2) {
+  color: #eee;
+  padding: 0 0 0 15px;
+}
+#manager-bookmark-list a:hover span:nth-child(2) {
+  color: #aaa;
+}
+
 button:focus { outline: none; }
 
 
@@ -117,7 +128,7 @@ button:focus { outline: none; }
     #right-content header #search-field {
       position: absolute;
       top: 0;
-      right: 35px;
+      right: 15px;
     }
       #right-content header #search-field input {
         width: 230px;
@@ -127,6 +138,13 @@ button:focus { outline: none; }
     line-height: 30px;
     background: #e0e0e0;
     font-size: 11px;
+  }
+  #right-content #bookmark-path #bookmark-path-content {
+    float: left;
+  }
+  #right-content select {
+    float: right;
+    margin: 6px 15px 0 0;
   }
 
 #right-content ul {
@@ -227,3 +245,11 @@ button:focus { outline: none; }
 
 
 .hidden { display: none; }
+
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
