@@ -7,40 +7,7 @@ OB.section = OB.seciton || {};
 (function () {
   OB.active_index = 0;
 
-  OB.section.POPUP = 0;
-  OB.section.MANAGER = 1;
-
-  OB.create_popup_bookmark = function (obj) {
-    var txt
-    , anchor = document.createElement('a')
-    , item   = document.createElement('li')
-    , img    = document.createElement('img')
-    ;
-
-    if (Browser.info.vendor == 'Opera') {
-      img.setAttribute('src', 'opera://favicon/' + obj.url);
-    }
-    else {
-      img.setAttribute('src', 'chrome://favicon/' + obj.url);
-    }
-
-    txt = obj.title.length > 0 ? obj.title : obj.url;
-    txt = document.createTextNode(txt);
-
-
-    anchor.setAttribute('href', obj.url);
-    anchor.appendChild(txt);
-
-    item.setAttribute('id', 'mark_' + obj.id);
-    item.appendChild(img);
-    item.appendChild(anchor);
-
-    anchor.addEventListener('click', function() {
-      chrome.tabs.create({url:obj.url});
-    });
-
-    document.querySelector('#search-result ul').appendChild(item);
-  };
+  
 
   OB.delete_bookmark = function (id) {
     Utils.add_class('hidden', document.getElementById('mark_' + id));
@@ -69,7 +36,6 @@ OB.section = OB.seciton || {};
         url: current_page.url
       });
 
-
       chrome.tabs.query({currentWindow: true, active: true}, function(tab) {
         chrome.pageAction.setIcon({tabId:current_page.id, path:"media/bookmark_red.png"});
       });
@@ -79,7 +45,6 @@ OB.section = OB.seciton || {};
   };
 
   OB.search_bookmarks = function (string, callback) {
-    var that = this;
     chrome.bookmarks.search(string, function (results) {
       callback(results);
     });

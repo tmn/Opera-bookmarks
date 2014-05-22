@@ -31,12 +31,41 @@ search_field.addEventListener('keyup', function(e) {
     OB.search_bookmarks(search_field.value, function (results) {
       document.querySelector('#search-result ul').innerHTML = '';
 
-      for (var i = 0; i < results.length; i++) {
-        if (results[i].url) {
-          OB.create_popup_bookmark(results[i]);
+      results.forEach(function (result) {
+        if (result.url) {
+          var txt
+          , anchor = document.createElement('a')
+          , item   = document.createElement('li')
+          , img    = document.createElement('img')
+          ;
+
+          if (Browser.info.vendor == 'Opera') {
+            img.setAttribute('src', 'opera://favicon/' + result.url);
+          }
+          else {
+            img.setAttribute('src', 'chrome://favicon/' + result.url);
+          }
+
+          txt = result.title.length > 0 ? result.title : result.url;
+          txt = document.createTextNode(txt);
+
+
+          anchor.setAttribute('href', result.url);
+          anchor.appendChild(txt);
+
+          item.setAttribute('id', 'mark_' + result.id);
+          item.appendChild(img);
+          item.appendChild(anchor);
+
+          anchor.addEventListener('click', function() {
+            chrome.tabs.create({url:result.url});
+          });
+
+          document.querySelector('#search-result ul').appendChild(item);
         }
-      }
+      });
     });
+
     Utils.remove_class('hidden', document.getElementById('search-result'));
   }
   else {
