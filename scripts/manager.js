@@ -330,15 +330,13 @@ OB = window.OB || {};
 
 
   var show_context_menu = function (e) {
-
+    e.preventDefault();
 
     context_menu_left_active_id = e.target.dataset.id === undefined ? e.target.parentNode.dataset.id : e.target.dataset.id;
 
     context_menu_left.style.left = window.event.clientX + 'px';
     context_menu_left.style.top = window.event.clientY + 'px';
     context_menu_left.style.display = 'inline';
-
-    window.event.returnValue = false;
   };
 
   left_folder_list.addEventListener('contextmenu', show_context_menu, false);
