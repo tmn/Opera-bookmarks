@@ -31,15 +31,6 @@ OB = window.OB || {};
 
   var context_menu_left_active_id = -1;
 
-  var create_folder = function () {
-    var name = (modal_new_folder_input.value.length === 0) ? 'New folder' : modal_new_folder_input.value;
-
-    chrome.bookmarks.create({
-      parentId: modal_new_folder_select.value,
-      title: name
-    });
-  };
-
   var create_bookmark_element = function (bookmark, parent) {
     var li = document.createElement('li');
     var a = document.createElement('a');
@@ -77,40 +68,12 @@ OB = window.OB || {};
     }
   };
 
+  var create_folder = function () {
+    var name = (modal_new_folder_input.value.length === 0) ? 'New folder' : modal_new_folder_input.value;
 
-  var fill_bookmarks_view = function (bookmarks) {
-    right_bookmark_list.innerHTML = '';
-
-    if (bookmarks.length === 0) {
-      right_bookmark_list.innerHTML = '<li>No bookmarks found</li>';
-      return;
-    }
-
-
-    bookmarks.sort(function (a, b) {
-      var n_a, n_b;
-
-      if (document.getElementById('sort-by').selectedIndex === sort.NAME) {
-        n_a = a.title.toUpperCase();
-        n_b = b.title.toUpperCase();
-      }
-      else if (document.getElementById('sort-by').selectedIndex === sort.DATE) {
-        n_a = a.dateAdded;
-        n_b = b.dateAdded;
-      }
-
-      if (n_a < n_b) {
-        return (a.url) ? -1 : 1;
-      }
-      else if (n_a > n_b) {
-        return (b.url) ? 1 : -1;
-      }
-
-      return 0;
-    });
-
-    bookmarks.forEach(function (bookmark) {
-      create_bookmark_element(bookmark, right_bookmark_list);
+    chrome.bookmarks.create({
+      parentId: modal_new_folder_select.value,
+      title: name
     });
   };
 
@@ -157,6 +120,42 @@ OB = window.OB || {};
     });
   };
 
+  var fill_bookmarks_view = function (bookmarks) {
+    right_bookmark_list.innerHTML = '';
+
+    if (bookmarks.length === 0) {
+      right_bookmark_list.innerHTML = '<li>No bookmarks found</li>';
+      return;
+    }
+
+
+    bookmarks.sort(function (a, b) {
+      var n_a, n_b;
+
+      if (document.getElementById('sort-by').selectedIndex === sort.NAME) {
+        n_a = a.title.toUpperCase();
+        n_b = b.title.toUpperCase();
+      }
+      else if (document.getElementById('sort-by').selectedIndex === sort.DATE) {
+        n_a = a.dateAdded;
+        n_b = b.dateAdded;
+      }
+
+      if (n_a < n_b) {
+        return (a.url) ? -1 : 1;
+      }
+      else if (n_a > n_b) {
+        return (b.url) ? 1 : -1;
+      }
+
+      return 0;
+    });
+
+    bookmarks.forEach(function (bookmark) {
+      create_bookmark_element(bookmark, right_bookmark_list);
+    });
+  };
+
   var fill_new_folder_list = function (bookmarks, parent_folder, step) {
     step = step || 0;
 
@@ -200,6 +199,16 @@ OB = window.OB || {};
     });
   };
 
+  var show_context_menu = function (e) {
+    e.preventDefault();
+
+    context_menu_left_active_id = e.target.dataset.id === undefined ? e.target.parentNode.dataset.id : e.target.dataset.id;
+
+    context_menu_left.style.left = window.event.clientX + 'px';
+    context_menu_left.style.top = window.event.clientY + 'px';
+    context_menu_left.style.display = 'inline';
+  };
+
   var update_bookmark_path_view = function () {
     var bookmark_path = document.getElementById('bookmark-path-content');
 
@@ -207,20 +216,6 @@ OB = window.OB || {};
       bookmark_path.innerHTML = folder[0].title;
     });
   };
-
-
-
-  /* INIT
-  ----------------------------------------------------------------------------*/
-  chrome.bookmarks.getTree(function (bookmarks) {
-    fill_bookmark_folder_list(bookmarks);
-    fill_new_folder_list(bookmarks);
-  });
-
-  chrome.bookmarks.getChildren(active_folder, function (children) {
-    update_bookmark_path_view();
-    fill_bookmarks_view(children);
-  });
 
 
   /* DRAG & DROP
@@ -316,7 +311,6 @@ OB = window.OB || {};
     // TODO
   });
 
-
   document.addEventListener('keyup', function (e) {
     if (e.keyCode == 27) {
       modal_new_folder.style.display = 'none';
@@ -329,50 +323,12 @@ OB = window.OB || {};
   }, false);
 
 
-  var show_context_menu = function (e) {
-    e.preventDefault();
-
-    context_menu_left_active_id = e.target.dataset.id === undefined ? e.target.parentNode.dataset.id : e.target.dataset.id;
-
-    context_menu_left.style.left = window.event.clientX + 'px';
-    context_menu_left.style.top = window.event.clientY + 'px';
-    context_menu_left.style.display = 'inline';
-  };
-
   left_folder_list.addEventListener('contextmenu', show_context_menu, false);
   right_bookmark_list.addEventListener('contextmenu', show_context_menu, false);
 
   context_menu_delete.addEventListener('click', function (e) {
     chrome.bookmarks.remove(context_menu_left_active_id);
   }, false);
-
-  modal_new_folder_input.addEventListener('keyup', function (e) {
-    if (e.keyCode == 13) {
-      create_folder();
-      modal_new_folder.style.display = 'none';
-    }
-  });
-
-  modal_new_folder.addEventListener('click', function (e) {
-    if (modal_new_folder.id == e.target.id) {
-      this.style.display = 'none';
-    }
-  }, false);
-
-  btn_new_folder.addEventListener('click', function (e) {
-    modal_new_folder_input.value = '';
-    modal_new_folder.style.display = 'inline';
-    modal_new_folder_input.focus();
-  }, false);
-
-  modal_new_folder_create.addEventListener('click', function (e) {
-    create_folder();
-    modal_new_folder.style.display = 'none';
-  });
-
-  modal_new_folder_cancel.addEventListener('click', function (e) {
-    modal_new_folder.style.display = 'none';
-  });
 
   manager_search_field.addEventListener('keyup', function(e) {
     if (manager_search_field.value.length > 0) {
@@ -410,6 +366,50 @@ OB = window.OB || {};
     else {
       Utils.add_class('hidden', manager_search_result);
     }
+  });
+
+
+  /* Modal box
+  ----------------------------------------------------------------------------*/
+  btn_new_folder.addEventListener('click', function (e) {
+    modal_new_folder_input.value = '';
+    modal_new_folder.style.display = 'inline';
+    modal_new_folder_input.focus();
+  }, false);
+
+  modal_new_folder_input.addEventListener('keyup', function (e) {
+    if (e.keyCode == 13) {
+      create_folder();
+      modal_new_folder.style.display = 'none';
+    }
+  });
+
+  modal_new_folder.addEventListener('click', function (e) {
+    if (modal_new_folder.id == e.target.id) {
+      this.style.display = 'none';
+    }
+  }, false);
+
+  modal_new_folder_create.addEventListener('click', function (e) {
+    create_folder();
+    modal_new_folder.style.display = 'none';
+  });
+
+  modal_new_folder_cancel.addEventListener('click', function (e) {
+    modal_new_folder.style.display = 'none';
+  });
+
+
+  /* INIT
+  ----------------------------------------------------------------------------*/
+  chrome.bookmarks.getTree(function (bookmarks) {
+    fill_bookmark_folder_list(bookmarks);
+    fill_new_folder_list(bookmarks);
+  });
+
+  chrome.bookmarks.getChildren(active_folder, function (children) {
+    update_bookmark_path_view();
+    fill_bookmarks_view(children);
   });
 
 })();
